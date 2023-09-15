@@ -1,0 +1,74 @@
+spring:
+  application:
+    name: distributed-id
+  main:
+    allow-bean-definition-overriding: true
+  config:
+    import:
+      - optional:nacos:${APPLICATION_NAME:distributed-id}.yaml
+  cloud:
+    nacos:
+      username: ${NACOS_USERNAME:}
+      password: ${NACOS_PASSWORD:}
+      config:
+        server-addr: ${NACOS_CONFIG_SERVER_ADDR:127.0.0.1:8848}
+        namespace: ${NACOS_CONFIG_NAMESPACE:}
+        file-extension: yaml
+        maxRetry: 10
+      discovery:
+        server-addr: ${NACOS_DISCOVERY_SERVER_ADDR:127.0.0.1:8848}
+        namespace: ${NACOS_DISCOVERY_NAMESPACE:}
+        enabled: true
+  sql:
+    init:
+      platform: h2
+      schema-locations: classpath:db/schema-h2.sql
+      data-locations: classpath:db/data-h2.sql
+
+distributed:
+  datasource:
+    url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false
+    driver-class-name: org.h2.Driver
+    password:
+    username:
+  redis:
+    # 控制redis方式是否开启，开启则需要 framework-core-redis 配置
+    enable: true
+  segment:
+    # 控制号段模式是否开启
+    enable: true
+  snowflake:
+    # 控制雪花模式是否开启
+    enable: true
+    zookeeper:
+      address: 127.0.0.1:2181
+
+dubbo:
+  protocols:
+    dubbo:
+      name: dubbo
+      port: -1
+  registry:
+    session: 3000
+    timeout: 20000
+    username:
+    password:
+    address: nacos://127.0.0.1:8848
+    parameters:
+      namespace:
+      group:
+  metadata-report:
+    timeout: 20000
+    address: nacos://127.0.0.1:8848
+    parameters:
+      namespace:
+      group:
+  config-center:
+    namespace:
+    address: nacos://127.0.0.1:8848
+  provider:
+    check: false
+
+logging:
+  config: classpath:logback-spring.xml
+

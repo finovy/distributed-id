@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+option java_multiple_files = false;
+option java_package = "tech.finovy.distributed.id.grpc";
+option java_outer_classname = "DistributedIdProto";
+
+service Segment {
+  rpc getId(IdRequest) returns (IdResponse) {}
+  rpc getIds(IdListRequest) returns (IdListResponse) {}
+}
+
+service Redis {
+  rpc getId(IdRequest) returns (IdResponse) {}
+  rpc getIds(IdListRequest) returns (IdListResponse) {}
+}
+
+service Snowflake {
+  rpc getId(IdRequest) returns (IdResponse) {}
+  rpc getIds(IdListRequest) returns (IdListResponse) {}
+}
+
+message IdRequest {
+  string key = 1;
+}
+
+message IdResponse {
+  int32  code = 1;
+  int64 data = 2;
+  string message = 3;
+}
+
+message IdListRequest {
+  string key = 1;
+  int32 batch = 2;
+}
+
+message IdListResponse {
+  int32 code = 1;
+  repeated int64 data = 2;
+  string message = 3;
+}
