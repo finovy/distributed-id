@@ -4,6 +4,7 @@ Distributed-ID
   <a href="https://github.com/finovy/distributed-id/network/members"><img src="https://img.shields.io/github/forks/finovy/distributed-id?style=flat-square&logo=GitHub"></a>
   <a href="https://github.com/finovy/distributed-id/blob/master/LICENSE"><img src="https://img.shields.io/github/license/finovy/distributed-id.svg?style=flat-square"></a>
 </p>
+
 English | [中文版](README_CN.md)
 
 - [Project Introduction](#project-introduction)

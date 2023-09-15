@@ -4,6 +4,7 @@
   <a href="https://github.com/finovy/distributed-id/network/members"><img src="https://img.shields.io/github/forks/finovy/distributed-id?style=flat-square&logo=GitHub"></a>
   <a href="https://github.com/finovy/distributed-id/blob/master/LICENSE"><img src="https://img.shields.io/github/license/finovy/distributed-id.svg?style=flat-square"></a>
 </p>
+
 中文版 | [English](README.md)
 
 - [项目介绍](#项目介绍)
