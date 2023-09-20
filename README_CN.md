@@ -1,9 +1,12 @@
 分布式ID
+
+
 <p align="center">
   <a href="https://github.com/finovy/distributed-id"><img src="https://img.shields.io/github/stars/finovy/distributed-id?style=flat-square&logo=github"></a>
   <a href="https://github.com/finovy/distributed-id/network/members"><img src="https://img.shields.io/github/forks/finovy/distributed-id?style=flat-square&logo=GitHub"></a>
-  <a href="https://github.com/finovy/distributed-id/blob/master/LICENSE"><img src="https://img.shields.io/github/license/finovy/distributed-id.svg?style=flat-square"></a>
+  <a href="https://github.com/finovy/distributed-id/blob/main/LICENSE"><img src="https://img.shields.io/github/license/finovy/distributed-id.svg?style=flat-square"></a>
 </p>
+
 
 中文版 | [English](README.md)
 
@@ -69,15 +72,15 @@ distributed-id
 
 **流程:**
 
-![redis_example](/document/redis_example.png)
+![redis_example](/docs/source/image/redis_example.png)
 
-![redis_principle](/document/redis_principle.png)
+![redis_principle](/docs/source/image/redis_principle.png)
 
 ### Segment
 
 **简述:** 参考美团Leaf实现方案。
 
-![segment_principle](/document/segment_principle.png)
+![segment_principle](/docs/source/image/segment_principle.png)
 
 ### **Snowflake**
 
@@ -266,7 +269,7 @@ message IdListResponse {
 }
 ```
 
-![grpc_example](/document/grpc_example.png)
+![grpc_example](/docs/source/image/grpc_example.png)
 
 响应示例:
 

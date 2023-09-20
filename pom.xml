@@ -31,8 +31,6 @@
         <grpc-server.version>2.14.0.RELEASE</grpc-server.version>
         <curator.version>2.6.0</curator.version>
         <dubbo.version>3.2.2</dubbo.version>
-        <snakeyaml.version>1.33</snakeyaml.version>
-
         <!--Management-->
         <spring.cloud.version>2022.0.2</spring.cloud.version>
         <spring-cloud-alibaba.version>2022.0.0.0-RC2</spring-cloud-alibaba.version>
@@ -81,11 +79,6 @@
                 <groupId>net.devh</groupId>
                 <artifactId>grpc-server-spring-boot-starter</artifactId>
                 <version>${grpc-server.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.yaml</groupId>
-                <artifactId>snakeyaml</artifactId>
-                <version>1.33</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
