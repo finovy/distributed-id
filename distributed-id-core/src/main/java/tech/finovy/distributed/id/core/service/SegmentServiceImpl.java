@@ -84,7 +84,7 @@ public class SegmentServiceImpl extends AbstractIdService {
         ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor(
                 new NamedThreadFactory("Thread-Check-DBCache", 1));
         // 60s后延迟执行,每60秒加载一遍数据
-        service.scheduleWithFixedDelay(this::updateCacheFromDb, 60, 60, TimeUnit.SECONDS);
+        service.scheduleWithFixedDelay(this::updateCacheFromDb, 0, 60, TimeUnit.SECONDS);
     }
 
     private void updateCacheFromDb() {

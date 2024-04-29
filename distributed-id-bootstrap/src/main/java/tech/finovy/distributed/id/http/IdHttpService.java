@@ -1,9 +1,5 @@
 package tech.finovy.distributed.id.http;
 
-import tech.finovy.distributed.id.constants.TypeEnum;
-import tech.finovy.distributed.id.core.AbstractIdService;
-import tech.finovy.distributed.id.core.CoreServiceManager;
-import tech.finovy.distributed.id.BaseService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +9,12 @@ import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
+import tech.finovy.distributed.id.BaseService;
+import tech.finovy.distributed.id.config.DistributedProperties;
+import tech.finovy.distributed.id.constants.TypeEnum;
+import tech.finovy.distributed.id.core.AbstractIdService;
+import tech.finovy.distributed.id.core.CoreServiceManager;
+import tech.finovy.distributed.id.core.event.DistributedIdEventPublisher;
 import tech.finovy.distributed.id.exception.BusinessException;
 import tech.finovy.distributed.id.response.R;
 
@@ -21,19 +23,26 @@ import java.util.List;
 import static tech.finovy.distributed.id.util.WrapperUtil.wrapper;
 import static tech.finovy.distributed.id.util.WrapperUtil.wrapperList;
 
-
 @Slf4j
 @Component
 public class IdHttpService extends BaseService {
 
     private final CoreServiceManager manager;
 
-    public IdHttpService(CoreServiceManager manager) {
+    private final DistributedProperties properties;
+
+    public IdHttpService(CoreServiceManager manager, DistributedIdEventPublisher eventPublisher, DistributedProperties properties) {
         this.manager = manager;
+        this.properties= properties;
+        eventPublisher.publishStartEvent("Http-protocol started");
     }
 
     @Bean
     public RouterFunction<ServerResponse> idRoutes() {
+        if (!properties.getHttp().isEnable()) {
+            log.info("Http is disable,will skip");
+            return null;
+        }
         return RouterFunctions.route()
                 .GET("/distributed/{type}/{key}", request -> handleIdRequest(request, false, false))
                 .GET("/distributed/{type}/{key}/{batch}", request -> handleIdRequest(request, true, false))

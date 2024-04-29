@@ -16,27 +16,29 @@
             <artifactId>distributed-id-common</artifactId>
             <version>${revision}</version>
         </dependency>
-        <dependency>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis</artifactId>
-            <version>3.5.6</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis-spring</artifactId>
-            <version>3.0.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-context</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>tech.finovy</groupId>
-            <artifactId>framework-datasource-dynamic</artifactId>
+            <artifactId>framework-component-datasource-dynamic</artifactId>
         </dependency>
         <dependency>
             <groupId>tech.finovy</groupId>
             <artifactId>framework-common-security</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-spring</artifactId>
+        </dependency>
+
+        <!--Spring-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-context</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

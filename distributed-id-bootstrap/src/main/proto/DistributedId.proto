@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 option java_multiple_files = false;
-option java_package = "tech.finovy.distributed.id.grpc";
+option java_package = "tech.finovy.framework.distributed.id.grpc";
 option java_outer_classname = "DistributedIdProto";
 
 service Segment {

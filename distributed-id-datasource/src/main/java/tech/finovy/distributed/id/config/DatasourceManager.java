@@ -2,7 +2,7 @@ package tech.finovy.distributed.id.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import tech.finovy.framework.common.SecurityEncryption;
-import tech.finovy.framework.datasource.pools.DynamicDataSouceMap;
+import tech.finovy.framework.datasource.dynamic.entity.DynamicDatasourceConfig;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.ObjectUtils;
-import tech.finvoy.framework.datasource.common.entity.DynamicDatasourceConfig;
+import tech.finovy.framework.datasource.dynamic.pools.DynamicDataSourceMap;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -47,7 +47,7 @@ public class DatasourceManager {
 
     @Bean
     public DruidDataSource distributedIdConfigurationDataSource() throws SQLException {
-        DynamicDataSouceMap dynamicDataSourceMap = new DynamicDataSouceMap();
+        DynamicDataSourceMap dynamicDataSourceMap = new DynamicDataSourceMap();
         if (dynamicDataSourceMap.getDatasource(DISTRIBUTED_ID_SEGMENT_DATASOURCE_KEY) != null) {
             return dynamicDataSourceMap.getDatasource(DISTRIBUTED_ID_SEGMENT_DATASOURCE_KEY);
         }
@@ -81,7 +81,7 @@ public class DatasourceManager {
     private void encrypt(DynamicDatasourceConfig config) {
         String dconfSecret = System.getenv("DCONF_SECRET");
         String dconfIv = System.getenv("DCONF_IV");
-        if (StringUtils.isBlank(dconfSecret)) {
+        if (StringUtils.isBlank(dconfSecret) || StringUtils.isBlank(dconfIv)) {
             return;
         }
         try {

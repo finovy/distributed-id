@@ -8,16 +8,16 @@ spring:
       - optional:nacos:${APPLICATION_NAME:distributed-id}.yaml
   cloud:
     nacos:
-      username: ${NACOS_USERNAME:}
-      password: ${NACOS_PASSWORD:}
+      username: ${NACOS_USERNAME:nacos}
+      password: ${NACOS_PASSWORD:nacos}
       config:
         server-addr: ${NACOS_CONFIG_SERVER_ADDR:127.0.0.1:8848}
-        namespace: ${NACOS_CONFIG_NAMESPACE:}
+        namespace: ${NACOS_CONFIG_NAMESPACE:dev}
         file-extension: yaml
         maxRetry: 10
       discovery:
         server-addr: ${NACOS_DISCOVERY_SERVER_ADDR:127.0.0.1:8848}
-        namespace: ${NACOS_DISCOVERY_NAMESPACE:}
+        namespace: ${NACOS_DISCOVERY_NAMESPACE:dev}
         enabled: true
   sql:
     init:
@@ -29,8 +29,8 @@ distributed:
   datasource:
     url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false
     driver-class-name: org.h2.Driver
-    password:
-    username:
+    password: gZxL6mjsru07mRuX
+    username: crm_system_v5
   redis:
     # 控制redis方式是否开启，开启则需要 framework-core-redis 配置
     enable: true
@@ -41,7 +41,7 @@ distributed:
     # 控制雪花模式是否开启
     enable: true
     zookeeper:
-      address: 127.0.0.1:2181
+      address: 10.7.0.110:32348
 
 dubbo:
   protocols:
@@ -51,20 +51,20 @@ dubbo:
   registry:
     session: 3000
     timeout: 20000
-    username:
-    password:
+    username: nacos
+    password: nacos
     address: nacos://127.0.0.1:8848
     parameters:
-      namespace:
-      group:
+      namespace: stg-registry
+      group: V5-GROUP
   metadata-report:
     timeout: 20000
     address: nacos://127.0.0.1:8848
     parameters:
-      namespace:
-      group:
+      namespace: stg-registry
+      group: V5-METADATA
   config-center:
-    namespace:
+    namespace: stg-dubbo-cfg
     address: nacos://127.0.0.1:8848
   provider:
     check: false

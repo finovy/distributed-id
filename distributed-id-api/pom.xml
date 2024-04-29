@@ -8,6 +8,5 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>distributed-id-api</artifactId>
-    <name>distributed-id-api</name>
 
 </project>

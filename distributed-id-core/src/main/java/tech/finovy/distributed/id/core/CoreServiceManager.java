@@ -5,6 +5,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import tech.finovy.distributed.id.constants.TypeEnum;
+import tech.finovy.distributed.id.core.event.DistributedIdEventPublisher;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,9 +22,11 @@ public class CoreServiceManager {
     public Map<TypeEnum, AbstractIdService> services = new HashMap<>(3);
 
     private final List<AbstractIdService> serviceList;
+    private final DistributedIdEventPublisher eventPublisher;
 
-    public CoreServiceManager(List<AbstractIdService> services) {
+    public CoreServiceManager(List<AbstractIdService> services, DistributedIdEventPublisher eventPublisher) {
         this.serviceList = services;
+        this.eventPublisher = eventPublisher;
     }
 
     @EventListener
@@ -31,7 +34,7 @@ public class CoreServiceManager {
         for (AbstractIdService service : serviceList) {
             service.init();
             this.services.put(service.getType(), service);
-            log.info("[{}]-id-server started ......", service.getType());
+            eventPublisher.publishStartEvent(service.getType() + "-provider started");
         }
     }
 

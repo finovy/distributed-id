@@ -21,26 +21,38 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
-        <!--log-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-context</artifactId>
+        </dependency>
+        <!---->
+        <dependency>
+            <groupId>tech.finovy</groupId>
+            <artifactId>framework-starter-healthcheck</artifactId>
+        </dependency>
         <dependency>
             <groupId>tech.finovy</groupId>
             <artifactId>framework-starter-http-logappender</artifactId>
         </dependency>
-        <!---->
         <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+            <groupId>tech.finovy</groupId>
+            <artifactId>framework-starter-nacos-discovery</artifactId>
         </dependency>
+        <dependency>
+            <groupId>tech.finovy</groupId>
+            <artifactId>framework-starter-skywalking</artifactId>
+        </dependency>
+        <!--grpc-->
         <dependency>
             <groupId>net.devh</groupId>
             <artifactId>grpc-server-spring-boot-starter</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-context</artifactId>
+            <groupId>com.alibaba.nacos</groupId>
+            <artifactId>logback-adapter</artifactId>
+            <version>1.0.0</version>
         </dependency>
-
-        <!--TEST-->
+        <!--test-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

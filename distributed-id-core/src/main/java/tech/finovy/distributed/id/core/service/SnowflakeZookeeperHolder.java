@@ -78,6 +78,7 @@ public class SnowflakeZookeeperHolder {
         this.connectionString = zkAddress;
         this.sessionTimeoutMs = connectionTimeoutMs;
         this.connectionTimeoutMs = sessionTimeoutMs;
+        LOGGER.info("ZK-info:{}", connectionString);
     }
 
     public boolean init() {

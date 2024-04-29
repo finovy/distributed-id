@@ -1,7 +1,9 @@
 package tech.finovy.distributed.id.grpc;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import tech.finovy.distributed.id.DistributedIdService;
 import tech.finovy.distributed.id.constants.Status;
+import tech.finovy.distributed.id.core.event.DistributedIdEventPublisher;
 import tech.finovy.distributed.id.grpc.lib.DistributedIdProto;
 import tech.finovy.distributed.id.BaseService;
 import org.springframework.stereotype.Service;
@@ -12,8 +14,13 @@ import java.util.List;
  * @Author: Ryan Luo
  * @Date: 2023/6/5 17:06
  */
+@ConditionalOnProperty(value = "distributed.grpc.enable", havingValue = "true", matchIfMissing = true)
 @Service
 public class GrpcBaseService extends BaseService {
+
+    public GrpcBaseService(DistributedIdEventPublisher eventPublisher) {
+        eventPublisher.publishStartEvent("Grpc-protocol started");
+    }
 
     protected void getId(DistributedIdService t, DistributedIdProto.IdRequest request,
                          io.grpc.stub.StreamObserver<DistributedIdProto.IdResponse> responseObserver) {

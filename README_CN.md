@@ -41,8 +41,8 @@
 - Zookeeper
 - Mysql
 - Sentinel 1.8.6
-- Nacos 2.2.2
-- Dubbo 2.7.15
+- Nacos 2.3.2
+- Dubbo 3.2.11
 
 ## 功能特性
 

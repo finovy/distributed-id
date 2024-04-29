@@ -1,12 +1,5 @@
 package tech.finovy.distributed.id.core.service;
 
-import tech.finovy.distributed.id.constants.Constants;
-import tech.finovy.distributed.id.constants.TypeEnum;
-import tech.finovy.distributed.id.core.AbstractIdService;
-import tech.finovy.distributed.id.core.config.GlobalConfiguration;
-import tech.finovy.distributed.id.dao.IDPersistDao;
-import tech.finovy.distributed.id.exception.BusinessException;
-import tech.finovy.distributed.id.mapper.IDPersistMapper;
 import com.google.common.collect.ImmutableList;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -16,11 +9,18 @@ import org.redisson.api.RScript;
 import org.redisson.client.codec.LongCodec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tech.finovy.distributed.id.constants.Constants;
+import tech.finovy.distributed.id.constants.TypeEnum;
+import tech.finovy.distributed.id.core.AbstractIdService;
+import tech.finovy.distributed.id.core.config.GlobalConfiguration;
+import tech.finovy.distributed.id.dao.IDPersistDao;
+import tech.finovy.distributed.id.exception.BusinessException;
+import tech.finovy.distributed.id.mapper.IDPersistMapper;
 import tech.finovy.distributed.id.thread.NamedThreadFactory;
-import tech.finovy.framework.redission.redissonclient.RedissonClientInterface;
+import tech.finovy.framework.redisson.holder.RedisContext;
+import tech.finovy.framework.redisson.holder.RedisContextHolder;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,30 +31,27 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
 @Service
-@ComponentScan(basePackages = "tech.finovy.framework.distributed")
 @ConditionalOnProperty(name = "distributed.redis.enable", havingValue = "true", matchIfMissing = true)
 public class RedisServiceImpl extends AbstractIdService {
 
     private static final String addScriptPath = "META-INF/script/redis_incr.lua";
     private static String addScript = "DEFAULT";
-    private static String ID_HEALTH_CHECK = "DISTRIBUTED:ID:CHECK";
+    private static final String ID_HEALTH_CHECK = "DISTRIBUTED:ID:CHECK";
     private static final String LOCK_TEMPLATE = "DISTRIBUTED:ID:LOCK:%S";
     private static final String CLEAR_LOCK_TEMPLATE = "DISTRIBUTED:ID:CLEAR:LOCK:%S";
     private static final AtomicBoolean REDIS_IS_OK = new AtomicBoolean(true);
     private final Set<String> keys = new HashSet<>();
 
     private final GlobalConfiguration config;
-    private final RedissonClientInterface client;
     private final IDPersistMapper mapper;
-    private final RScript script;
     private final ThreadPoolExecutor executor;
     @Autowired
     private IDPersistDao persistDao;
+    private final RedisContext redisContext = RedisContextHolder.get();
 
-    public RedisServiceImpl(GlobalConfiguration config, RedissonClientInterface client, IDPersistMapper mapper, ThreadPoolExecutor executor) {
+
+    public RedisServiceImpl(GlobalConfiguration config, IDPersistMapper mapper, ThreadPoolExecutor executor) {
         this.config = config;
-        this.client = client;
-        this.script = client.getScript();
         this.mapper = mapper;
         this.executor = executor;
     }
@@ -99,7 +96,7 @@ public class RedisServiceImpl extends AbstractIdService {
                 }
             } else {
                 try {
-                    client.getAtomicLong(ID_HEALTH_CHECK).incrementAndGet();
+                    redisContext.getClient().getAtomicLong(ID_HEALTH_CHECK).incrementAndGet();
                     redisIsOk = true;
                 } catch (Exception e) {
                     log.warn("redis is unHealth:{}", e.getMessage(), e);
@@ -109,11 +106,11 @@ public class RedisServiceImpl extends AbstractIdService {
             // 转变redis状态
             if (redisIsOk && !REDIS_IS_OK.get()) {
                 for (String key : keys) {
-                    final RLock lock = client.getLock(String.format(CLEAR_LOCK_TEMPLATE, key));
+                    final RLock lock = redisContext.getClient().getLock(String.format(CLEAR_LOCK_TEMPLATE, key));
                     if (lock.tryLock()) {
                         try {
-                            final String cacheKey = this.client.createKey(key, "ID");
-                            final RMap<String, Long> map = client.getMap(cacheKey, new LongCodec());
+                            final String cacheKey = redisContext.createKey(key, "ID");
+                            final RMap<String, Long> map = redisContext.getClient().getMap(cacheKey, new LongCodec());
                             map.clear();
                             log.warn("{}/{} redis is recover,and cache clear!", key, cacheKey);
                         } finally {
@@ -176,10 +173,10 @@ public class RedisServiceImpl extends AbstractIdService {
     private List<Long> getIdsFromRedis(String key, Long batch) {
         // 从redis获取分布式id，如果当前获取到的数据大于等于maxId，则进行等待获取
         List<Long> ids = new ArrayList<>();
-        List<Object> keys = ImmutableList.of(this.client.createKey(key, "ID"));
+        List<Object> keys = ImmutableList.of(redisContext.createKey(key, "ID"));
         int r = 0;
         while (ids.size() < batch) {
-            ids = script.eval(
+            ids = redisContext.getClient().getScript().eval(
                     RScript.Mode.READ_WRITE,
                     addScript.replaceAll("BATCH_SIGN", batch + ""),
                     RScript.ReturnType.MULTI,
@@ -216,11 +213,11 @@ public class RedisServiceImpl extends AbstractIdService {
 
     @SneakyThrows
     public boolean updateCacheFromRedis(String key, Long step) {
-        final RLock lock = client.getLock(String.format(LOCK_TEMPLATE, key));
+        final RLock lock = redisContext.getClient().getLock(String.format(LOCK_TEMPLATE, key));
         if (lock.tryLock()) {
             try {
-                final String cacheKey = this.client.createKey(key, "ID");
-                final RMap<String, Long> map = client.getMap(cacheKey, new LongCodec());
+                final String cacheKey = redisContext.createKey(key, "ID");
+                final RMap<String, Long> map = redisContext.getClient().getMap(cacheKey, new LongCodec());
                 if (!map.isExists()) {
                     log.info("begin to init: {}", cacheKey);
                     final Long maxIdFromDb = persistDao.updateMaxIdByCustomStep(key, step);
