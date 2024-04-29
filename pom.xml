@@ -21,7 +21,7 @@
     </modules>
 
     <properties>
-        <revision>0.1.0-SNAPSHOT</revision>
+        <revision>0.2.0</revision>
 
         <protoc.version>3.3.0</protoc.version>
         <protobuf.version>3.22.3</protobuf.version>
