@@ -27,7 +27,7 @@
         <protobuf.version>3.22.3</protobuf.version>
         <grpc-server.version>2.15.0.RELEASE</grpc-server.version>
         <curator.version>2.6.0</curator.version>
-        <snakeyaml.version>1.33</snakeyaml.version>
+        <snakeyaml.version>2.0</snakeyaml.version>
     </properties>
 
     <dependencyManagement>
